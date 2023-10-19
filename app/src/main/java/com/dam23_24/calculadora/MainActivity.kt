@@ -1,5 +1,6 @@
 package com.dam23_24.calculadora
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -21,7 +22,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var calc : Calculo
     private val df = DecimalFormat("#.##")
-    private lateinit var btn_c : Button
+
+    //lateinit de botón borrar dígito
+    private lateinit var btnC : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +47,9 @@ class MainActivity : AppCompatActivity() {
 
         btnCE = findViewById(R.id.btnCE)
         btnResult = findViewById(R.id.btnResult)
-        btn_c = findViewById(R.id.btn_C)
+
+        //asociar variable a botón
+        btnC = findViewById(R.id.btn_C)
 
         txtPantalla.text = ""
         txtDetalle.text = ""
@@ -96,7 +101,9 @@ class MainActivity : AppCompatActivity() {
 
         btnCE.setOnClickListener{ btnCEClicked() }
         btnResult.setOnClickListener{ btnResultClicked() }
-        btn_c.setOnClickListener { btn_C() }
+
+        //listener de botón borrar dígito
+        btnC.setOnClickListener { btn_C() }
 
     }
 
@@ -229,26 +236,50 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, msj, Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * @author Álvaro Castilla
+     * Función para gestionar las acciones al pulsar el botón <.
+     */
+    @SuppressLint("SetTextI18n")
     private fun btn_C(){
+        // Gestiona cuando se pulsa el botón < y la calculadora está esperando el num1 (no se ha pulsado un operador).
         if (calc.primerNum) {
+            // gestiona cuando la pantalla está vacía y se pulsa el botón.
             if (calc.numTemp1 == "") {
-                mensajeError("No se puede borrar. Numero vacío")
+                //gestiona cuando se intenta borrar el resultado (las variables se han reiniciado y el numeroTemp1 esta vacío)
+                if (txtDetalle.text.isNotBlank() && calc.op == 0) {
+                    mensajeError("No se puede borrar un resultado.")
+                }
+                // si no es un resultado quiere decir que se está introduciendo un primer número y se borra estando vacío.
+                else {
+                    txtPantalla.text = "ERROR"
+                    mensajeError("No se puede borrar. Numero vacío")
+                    calc.iniValores()
+                }
             }
+            // si la pantalla no está vacía se borra el último dígito y se muestra en pantalla
             else {
-                txtPantalla.text = calc.numTemp1.dropLast(1)
-                txtDetalle.text = txtDetalle.text.dropLast(1)
+                muestraValor(calc.numTemp1.dropLast(1),txtDetalle.text.dropLast(1).toString())
                 calc.numTemp1 = txtPantalla.text.toString()
             }
         }
+        // Gestiona cuando ya se ha introducido el primer número.
         else {
+            // gestiona cuando el número numTemp2 está vacío (la pantalla no tiene por qué estarlo) y se pulsa.
             if (calc.numTemp2 == "") {
+                //gestiona cuando el operador está siendo mostrado en pantalla y se borra.
                 if (txtPantalla.text.toString() == calc.operadorTxt()) {
-                    mensajeError("El operador no se puede borrar")
+                    calc.primerNum = true
+                    calc.num1 = 0f
+                    calc.op=0
+                    muestraValor(calc.numTemp1,calc.numTemp1)
                 }
+                //se ha borrado el número 2 y se vuelve a pulsar
                 else {
-                    mensajeError("No se puede borrar. Numero vacío")
+                    txtPantalla.text = calc.operadorTxt()
                 }
             }
+            //se borra el dígito del numTemp2
             else {
                 txtDetalle.text = txtDetalle.text.dropLast(1)
                 txtPantalla.text = calc.numTemp2.dropLast(1)
