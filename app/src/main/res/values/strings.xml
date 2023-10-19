@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Calculadora</string>
+    <string name="txt_btnCE">C</string>
+    <string name="txt_btnSuma">+</string>
+    <string name="txt_btnResta">-</string>
+    <string name="txt_btnMul">*</string>
+    <string name="txt_btnDiv">/</string>
+    <string name="txt_btnResult">=</string>
+    <string name="txt_btn0">0</string>
+    <string name="txt_btn1">1</string>
+    <string name="txt_btn2">2</string>
+    <string name="txt_btn3">3</string>
+    <string name="txt_btn4">4</string>
+    <string name="txt_btn5">5</string>
+    <string name="txt_btn6">6</string>
+    <string name="txt_btn7">7</string>
+    <string name="txt_btn8">8</string>
+    <string name="txt_btn9">9</string>
+    <string name="txt_btnDec">.</string>
+    <string name="txt_txtPantalla">%1$s</string>
+    <string name="txt_txtDetalle">%1$s</string>
+    <string name="btn_borrar"><![CDATA[<]]></string>
+</resources>
